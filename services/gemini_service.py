@@ -17,7 +17,7 @@ class GeminiService:
         genai.configure(api_key=API_KEY)
         self.model = genai.GenerativeModel(MODEL)
 
-    def generate(self, uploaded_file: UploadFile, user_id: int) -> str:
+    def generate(self, uploaded_file: UploadFile, user_id: int , prompt : str) -> str:
         # Step 1: Parse PDF into MedicalReportCreate
         report: MedicalReportCreate = parse_pdf_file(uploaded_file, user_id)
 
@@ -35,8 +35,8 @@ class GeminiService:
                 print(f"Could not open image {path}: {e}")
 
         # Step 4: Compose multimodal input for Gemini
-        prompt = f"You are a healthcare expert. Please analyze the following medical report:\n{text_content}"
-        input_data = [prompt] + images
+        input = f"{prompt} + "f"You are a healthcare expert. Please analyze the following medical report:\n{text_content}"
+        input_data = [input] + images
 
         # Step 5: Call Gemini and return the result
         try:
